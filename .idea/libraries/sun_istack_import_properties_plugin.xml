@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="sun.istack.import.properties.plugin" type="repository">
+    <properties maven-id="com.sun.istack:import-properties-plugin:3.0.10" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/import-properties-plugin-3.0.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-plugin-api-3.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-core-3.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/plexus-utils-3.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-resolver-api-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-model-3.5.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

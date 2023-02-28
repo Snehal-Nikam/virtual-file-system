@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="sun.apache.xml.internal.resolver" type="repository">
+    <properties maven-id="com.sun.org.apache.xml.internal:resolver:20050927" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/resolver-20050927.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
