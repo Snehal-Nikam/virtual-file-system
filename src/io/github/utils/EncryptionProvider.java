@@ -1,8 +1,8 @@
 
 
-package io.github.snehal.utils;
+package io.github.utils;
 
-import io.github.snehal.logging.Logger;
+import io.github.logging.Logger;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;

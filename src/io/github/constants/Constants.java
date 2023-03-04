@@ -1,8 +1,8 @@
 
 
-package io.github.snehal.constants;
+package io.github.constants;
 
-public class GlobalConstants {
+public class Constants {
     public static String libName = "iFS";
     public static String versionCode = "iFS v1.0";
     public static String logFileExtension = ".iFS.log";

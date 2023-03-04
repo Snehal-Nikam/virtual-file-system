@@ -1,14 +1,14 @@
-package io.github.snehal.filesystemnative;
+package io.github.filesystemnative;
 
 
-import io.github.snehal.constants.Configuration;
-import io.github.snehal.constants.GlobalConstants;
-import io.github.snehal.exception.iFSDirectoryNotEmptyException;
-import io.github.snehal.exception.iFSDiskFullException;
-import io.github.snehal.exception.iFSFileNotFoundException;
-import io.github.snehal.utils.CompressionProvider;
-import io.github.snehal.utils.EncryptionProvider;
-import io.github.snehal.utils.NativeHelperUtils;
+import io.github.constants.FileSystemConfiguration;
+import io.github.constants.Constants;
+import io.github.exception.vFSDirectoryNotEmptyException;
+import io.github.exception.vFSDiskFullException;
+import io.github.exception.vFSFileNotFoundException;
+import io.github.utils.CompressionProvider;
+import io.github.utils.EncryptionProvider;
+import io.github.utils.NativeHelperUtils;
 import org.jetbrains.annotations.NotNull;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -20,15 +20,15 @@ import java.util.TreeSet;
 import java.util.zip.DataFormatException;
 
 
-public class iFileSystem implements Serializable {
+public class vFileSystem implements Serializable {
     private byte[] _fileSystemBuffer;
     private TreeSet<Integer> freeInodes = new TreeSet<Integer>();
     //private Logger logger = Logger.getInstance();
-    private Configuration currentConfig;
-    private TreeSet<File> _fileSystem = new TreeSet<File>();
+    private FileSystemConfiguration currentConfig;
+    private TreeSet<FileInfo> _fileSystem = new TreeSet<FileInfo>();
     private TreeSet<Integer> _freeBlocks = new TreeSet<>();
 
-    public iFileSystem(@NotNull Configuration config) {
+    public vFileSystem(@NotNull FileSystemConfiguration config) {
         this.currentConfig = config;
         try {
             setupFileSystem(config.getNativeFilepath());
@@ -38,19 +38,19 @@ public class iFileSystem implements Serializable {
     }
 
     private void setupInodes() {
-        for (int i = 0; i < (currentConfig.getSize() * GlobalConstants.twoPowerTen / GlobalConstants.fileBlockSize);
+        for (int i = 0; i < (currentConfig.getSize() * Constants.twoPowerTen / Constants.fileBlockSize);
              ++i) {
             freeInodes.add(i);
         }
     }
 
     private void initStorageSpaceBuffer() {
-        _fileSystemBuffer = new byte[currentConfig.getSize() * GlobalConstants.twoPowerTen
-                * GlobalConstants.twoPowerTen];
+        _fileSystemBuffer = new byte[currentConfig.getSize() * Constants.twoPowerTen
+                * Constants.twoPowerTen];
     }
 
     private void setupFreeFileBlocks() {
-        for (int i = 0; i < (currentConfig.getSize() * GlobalConstants.twoPowerTen / GlobalConstants.fileBlockSize);
+        for (int i = 0; i < (currentConfig.getSize() * Constants.twoPowerTen / Constants.fileBlockSize);
              ++i) {
             _freeBlocks.add(i);
         }
@@ -65,7 +65,7 @@ public class iFileSystem implements Serializable {
     }
 
     private void openExistingFileSystem(String path) throws IOException {
-        byte[] _fileSystemTempBuffer = NativeHelper.readFileSystemFromNativeFileSystem(path);
+        byte[] _fileSystemTempBuffer = Helper.readFileSystemFromNativeFileSystem(path);
 
         throw new NotImplementedException();
     }
@@ -73,7 +73,7 @@ public class iFileSystem implements Serializable {
     public void finishFileSystem() {
         try {
             System.out.println("currentConfig.getNativeFilepath() : "+currentConfig.getNativeFilepath());
-            NativeHelper.writeFileSystemToNativeFileSystem(_fileSystemBuffer, currentConfig.getNativeFilepath());
+            Helper.writeFileSystemToNativeFileSystem(_fileSystemBuffer, currentConfig.getNativeFilepath());
 
         } catch (Exception e) {
             //logger.LogError(e.getMessage());
@@ -90,15 +90,15 @@ public class iFileSystem implements Serializable {
         }
     }
 
-    public void createFile(byte[] _buffer, String path) throws IOException, iFSDiskFullException {
+    public void createFile(byte[] _buffer, String path) throws IOException, vFSDiskFullException {
         int noOfFileBlocks;
         byte[] _compressedBuffer = CompressionProvider.CompressByteArray(_buffer);
-        float blocks = _compressedBuffer.length / (GlobalConstants.fileBlockSize * GlobalConstants.twoPowerTen);
+        float blocks = _compressedBuffer.length / (Constants.fileBlockSize * Constants.twoPowerTen);
         noOfFileBlocks = (int) Math.ceil(blocks);
         if (noOfFileBlocks == 0)
             noOfFileBlocks += 1;
         if (noOfFileBlocks > _freeBlocks.size()) {
-            throw new io.github.snehal.exception.iFSDiskFullException(" DISK SPACE FULL");
+            throw new vFSDiskFullException(" DISK SPACE FULL");
         }
         // Compress, Add the buffer to the file system buffer, setup iNodes and stuff
 
@@ -108,20 +108,20 @@ public class iFileSystem implements Serializable {
             _freeBlocks.remove(_freeBlocks.first());
         }
         for (int i = 0; i < noOfFileBlocks; ++i) {
-            for (int j = 0; j < GlobalConstants.fileBlockSize * GlobalConstants.twoPowerTen; ++j) {
+            for (int j = 0; j < Constants.fileBlockSize * Constants.twoPowerTen; ++j) {
                 if (j >= _compressedBuffer.length) {
-                    _fileSystemBuffer[(fileBlocks[i] * GlobalConstants.fileBlockSize * GlobalConstants.twoPowerTen) + j]
+                    _fileSystemBuffer[(fileBlocks[i] * Constants.fileBlockSize * Constants.twoPowerTen) + j]
                             = ((byte) 0);
                     continue;
                 }
-                _fileSystemBuffer[(fileBlocks[i] * GlobalConstants.fileBlockSize * GlobalConstants.twoPowerTen) + j]
-                        = _compressedBuffer[(i * GlobalConstants.fileBlockSize * GlobalConstants.twoPowerTen) + j];
+                _fileSystemBuffer[(fileBlocks[i] * Constants.fileBlockSize * Constants.twoPowerTen) + j]
+                        = _compressedBuffer[(i * Constants.fileBlockSize * Constants.twoPowerTen) + j];
             }
         }
 
         int iNode = freeInodes.first();
         freeInodes.remove(freeInodes.first());
-        File newFile = new File();
+        FileInfo newFile = new FileInfo();
         newFile._iNode = iNode;
         newFile._fileSize = _compressedBuffer.length;
         for (int i = 0; i < noOfFileBlocks; ++i) {
@@ -139,7 +139,7 @@ public class iFileSystem implements Serializable {
     public byte[] readFile(String path) throws IOException, DataFormatException {
         System.out.println("****** path ****** : "+ path);
         byte[] file;
-        File f = doesFileExist(path);
+        FileInfo f = doesFileExist(path);
         Iterator iterator = f._fileAllocationTable.iterator();
         int fileSize = f._fileSize;
         file = new byte[fileSize];
@@ -147,16 +147,16 @@ public class iFileSystem implements Serializable {
         int bytesRead = 0;
         while (iterator.hasNext()) {
             int currentBlock = (int) iterator.next();
-            for (int i = 0; i < GlobalConstants.fileBlockSize * GlobalConstants.twoPowerTen; ++i) {
+            for (int i = 0; i < Constants.fileBlockSize * Constants.twoPowerTen; ++i) {
                 if(bytesRead >= f._fileSize)
                 {
                     continue;
                 }
                 file[seekPointer + i] = _fileSystemBuffer[currentBlock *
-                        (GlobalConstants.fileBlockSize * GlobalConstants.twoPowerTen) + i];
+                        (Constants.fileBlockSize * Constants.twoPowerTen) + i];
                 bytesRead++;
             }
-            seekPointer = seekPointer + (GlobalConstants.fileBlockSize * GlobalConstants.twoPowerTen);
+            seekPointer = seekPointer + (Constants.fileBlockSize * Constants.twoPowerTen);
         }
         file = CompressionProvider.DecompressByteArray(file);
         return file;
@@ -166,7 +166,7 @@ public class iFileSystem implements Serializable {
         if (dirName.length() > currentConfig.getMaxDirectoryName()) {
             dirName = dirName.substring(0, currentConfig.getMaxDirectoryName() - 1);
         }
-        File newDirectory = new File();
+        FileInfo newDirectory = new FileInfo();
         newDirectory._iNode = freeInodes.first();
         freeInodes.remove(freeInodes.first());
         newDirectory._fileName = dirName;
@@ -180,9 +180,9 @@ public class iFileSystem implements Serializable {
     }
 
     public void deleteFile(String path) {
-        File fileToDelete = removeFileEntryFromTable(path);
+        FileInfo fileToDelete = removeFileEntryFromTable(path);
         if (fileToDelete == null) {
-            //logger.LogError(" File not found: " + path);
+            //logger.LogError(" FileInfo not found: " + path);
             return;
         }
         int iNode = fileToDelete._iNode;
@@ -193,7 +193,7 @@ public class iFileSystem implements Serializable {
         freeInodes.add(iNode);
     }
 
-    public void deleteDirectory(String path) throws iFSDirectoryNotEmptyException, iFSFileNotFoundException {
+    public void deleteDirectory(String path) throws vFSDirectoryNotEmptyException, vFSFileNotFoundException {
         // @TODO Delete everything with that directoryname in path
 
         //path = path.substring(path.lastIndexOf('/'), path.length() - 1);
@@ -204,14 +204,14 @@ public class iFileSystem implements Serializable {
         // Get subfile count
         if(getSubFileCount(path) > 1)
         {
-            throw new iFSDirectoryNotEmptyException("Directory Not Empty");
+            throw new vFSDirectoryNotEmptyException("Directory Not Empty");
         }
 
-        File dirToDelete = removeFileEntryFromTable(path);
+        FileInfo dirToDelete = removeFileEntryFromTable(path);
         if(dirToDelete == null)
         {
             //logger.LogError("Directory not found");
-            throw new iFSFileNotFoundException("Directory not found");
+            throw new vFSFileNotFoundException("Directory not found");
         }
         int iNode = dirToDelete._iNode;
         if (dirToDelete != null) {
@@ -221,7 +221,7 @@ public class iFileSystem implements Serializable {
     }
 
 //    private void deleteAllFilesInGivenDirectory(String path) {
-//        for (File f : _fileSystem) {
+//        for (FileInfo f : _fileSystem) {
 //            if (f._internalPath.startsWith(path)) {
 //                if (f._fileSize == -1)
 //                    deleteDirectory(f._internalPath);
@@ -231,9 +231,9 @@ public class iFileSystem implements Serializable {
 //        }
 //    }
 
-    private File removeFileEntryFromTable(String path) {
-        File del = null;
-        for (File name : _fileSystem) {
+    private FileInfo removeFileEntryFromTable(String path) {
+        FileInfo del = null;
+        for (FileInfo name : _fileSystem) {
             if (name._internalPath.equals(path)) {
                 del = name;
             }
@@ -241,16 +241,16 @@ public class iFileSystem implements Serializable {
         return del;
     }
 
-    private void freeUsedFileBlocks(File f) {
+    private void freeUsedFileBlocks(FileInfo f) {
         Iterator iterator = f._fileAllocationTable.iterator();
         while (iterator.hasNext()) {
             _freeBlocks.add((Integer) iterator.next());
         }
     }
 
-    private File doesFileExist(String path) {
-        File file = null;
-        for (File f : _fileSystem) {
+    private FileInfo doesFileExist(String path) {
+        FileInfo file = null;
+        for (FileInfo f : _fileSystem) {
             if (f._internalPath.equals(path)) {
                 file = f;
             }
@@ -261,7 +261,7 @@ public class iFileSystem implements Serializable {
     public String[] listAllFiles() {
         String[] files = new String[_fileSystem.size()];
         int i = 0;
-        for (File f : _fileSystem) {
+        for (FileInfo f : _fileSystem) {
             if (f._fileSize == -1)
                 continue;
             files[i] = f._fileName;
@@ -273,7 +273,7 @@ public class iFileSystem implements Serializable {
     public ArrayList<String> listAllDirectories() {
         ArrayList<String> files = new ArrayList<>();
         int i = 0;
-        for (File f : _fileSystem) {
+        for (FileInfo f : _fileSystem) {
             if (f._fileSize == -1) {
                 files.add(f._fileName);
                 i++;
@@ -285,7 +285,7 @@ public class iFileSystem implements Serializable {
     private int getSubFileCount(String path)
     {
         int counter = 0;
-        for(File f : _fileSystem)
+        for(FileInfo f : _fileSystem)
         {
             if(f._internalPath.startsWith(path))
             {

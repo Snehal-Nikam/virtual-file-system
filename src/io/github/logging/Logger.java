@@ -1,9 +1,9 @@
 
 
-package io.github.snehal.logging;
+package io.github.logging;
 
-import io.github.snehal.constants.GlobalConstants;
-import io.github.snehal.utils.NativeHelperUtils;
+import io.github.constants.Constants;
+import io.github.utils.NativeHelperUtils;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -21,9 +21,9 @@ public class Logger implements Serializable {
     private String path;
 
     private Logger() {
-        path = NativeHelperUtils.getUserHomeDirectory() + GlobalConstants.pathEscape + GlobalConstants.logPath +
-                GlobalConstants.pathEscape + GlobalConstants.libName + NativeHelperUtils.getDateOrTime(true) +
-                NativeHelperUtils.getDateOrTime(false) + GlobalConstants.logFileExtension;
+        path = NativeHelperUtils.getUserHomeDirectory() + Constants.pathEscape + Constants.logPath +
+                Constants.pathEscape + Constants.libName + NativeHelperUtils.getDateOrTime(true) +
+                NativeHelperUtils.getDateOrTime(false) + Constants.logFileExtension;
         try {
             _buffer = new BufferedWriter(new FileWriter(path));
         } catch (IOException e) {
@@ -49,7 +49,7 @@ public class Logger implements Serializable {
 
     public void LogError(String error) {
         try {
-            _buffer.write(GlobalConstants.ErrorString + error + "\n");
+            _buffer.write(Constants.ErrorString + error + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,7 +57,7 @@ public class Logger implements Serializable {
 
     public void LogDebug(String debug) {
         try {
-            _buffer.write(GlobalConstants.DebugString + debug + "\n");
+            _buffer.write(Constants.DebugString + debug + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

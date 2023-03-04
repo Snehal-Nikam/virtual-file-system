@@ -1,6 +1,6 @@
 
 
-package io.github.snehal.utils;
+package io.github.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

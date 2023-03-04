@@ -1,14 +1,14 @@
 
 
-package io.github.snehal.filesystemnative;
+package io.github.filesystemnative;
 
-import io.github.snehal.logging.Logger;
+import io.github.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.io.File;
 
-public class NativeHelper {
+public class Helper {
     public static byte[] readFileSystemFromNativeFileSystem(String path) {
         File f = new File(path);
         byte[] _filebuffer = new byte[(int) f.length()];
@@ -24,7 +24,7 @@ public class NativeHelper {
 
     public static void writeFileSystemToNativeFileSystem(byte[] _buffer, String path) {
 
-        // FileUtils.writeByteArrayToFile(new File(path), _buffer);
+        // FileUtils.writeByteArrayToFile(new FileInfo(path), _buffer);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutput out = null;
         try {
@@ -43,7 +43,7 @@ public class NativeHelper {
         }
     }
 
-    public static void saveFileSystemState(iFileSystem fs) throws Exception {
+    public static void saveFileSystemState(vFileSystem fs) throws Exception {
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("temp.bin"));
         oos.writeObject(fs);
         oos.close();

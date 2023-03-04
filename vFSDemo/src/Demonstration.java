@@ -1,10 +1,10 @@
-import io.github.snehal.constants.Configuration;
-import io.github.snehal.exception.iFSDirectoryNotEmptyException;
-import io.github.snehal.exception.iFSDiskFullException;
-import io.github.snehal.exception.iFSFileNotFoundException;
-import io.github.snehal.filesystemnative.NativeHelper;
-import io.github.snehal.filesystemnative.iFileSystem;
-import io.github.snehal.logging.Logger;
+import io.github.constants.FileSystemConfiguration;
+import io.github.exception.vFSDirectoryNotEmptyException;
+import io.github.exception.vFSDiskFullException;
+import io.github.exception.vFSFileNotFoundException;
+import io.github.filesystemnative.Helper;
+import io.github.filesystemnative.vFileSystem;
+import io.github.logging.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,8 +19,8 @@ public class Demonstration {
         File file = new File("/home/snehal/ifs.bin");
         file.delete();
 
-        Configuration config = new Configuration(4, 16, 16, "/home/snehal/ifs.bin", "abe");
-        iFileSystem fileSystem = new iFileSystem(config);
+        FileSystemConfiguration config = new FileSystemConfiguration(4, 16, 16, "/home/snehal/ifs.bin", "abe");
+        vFileSystem fileSystem = new vFileSystem(config);
 
         for (File f : new File("/home/snehal/Desktop/git/ifs_data1").listFiles()) {
             if (f.isDirectory())
@@ -29,7 +29,7 @@ public class Demonstration {
             byte[] data = Files.readAllBytes(Paths.get(f.getPath()));
             try {
                 fileSystem.createFile(data, f.getPath().substring(f.getPath().lastIndexOf('/')));
-            } catch (iFSDiskFullException e) {
+            } catch (vFSDiskFullException e) {
                 e.printStackTrace();
             }
         }
@@ -64,7 +64,7 @@ public class Demonstration {
             try {
                 fileSystem.createFile(data, "/Snehal_Dir" +
                         f.getPath().substring(f.getPath().lastIndexOf('/')));
-            } catch (iFSDiskFullException e) {
+            } catch (vFSDiskFullException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -76,18 +76,15 @@ public class Demonstration {
         System.out.println("\n\nDelete Directory");
         try {
             fileSystem.deleteDirectory("/Snehal_Dir");
-        } catch (iFSDirectoryNotEmptyException e) {
+        } catch (vFSDirectoryNotEmptyException e) {
             System.out.println(e.getMessage());
-        } catch (iFSFileNotFoundException e) {
+        } catch (vFSFileNotFoundException e) {
             System.out.println(e.getMessage());
         }
 
         fileSystem.deleteFile("/Snehal_Dir/TextFile.txt");
         fileSystem.deleteFile("/Snehal_Dir/restricted.txt");
         fileSystem.deleteFile("/Snehal_Dir/index.html");
-//        fileSystem.deleteFile("/Snehal_Dir/drivers2.ppt");
-//        fileSystem.deleteFile("/Snehal_Dir/project.pdf");
-//        fileSystem.deleteFile("/Snehal_Dir/text.txt");
 
         System.out.println("After deleting files individually");
 
@@ -99,9 +96,9 @@ public class Demonstration {
 
         try {
             fileSystem.deleteDirectory("/Snehal_Dir");
-        } catch (iFSDirectoryNotEmptyException e) {
+        } catch (vFSDirectoryNotEmptyException e) {
             System.out.println(e.getMessage());
-        } catch (iFSFileNotFoundException e) {
+        } catch (vFSFileNotFoundException e) {
             System.out.println(e.getMessage());
         }
         System.out.println("\nList of directories");
@@ -118,13 +115,13 @@ public class Demonstration {
 
         System.out.println("\n\n\nfinish");
         fileSystem.finishFileSystem();
-        NativeHelper.saveFileSystemState(fileSystem);
+        Helper.saveFileSystemState(fileSystem);
         //System.out.println("fin");
         Logger.getInstance().Finish();
 
         FileInputStream file1 = new FileInputStream("temp.bin");
         ObjectInputStream in = new ObjectInputStream(file1);
-        iFileSystem fs2 = (iFileSystem) in.readObject();
+        vFileSystem fs2 = (vFileSystem) in.readObject();
         for (String s : fs2.listAllFiles()) {
             System.out.println("existing ** : "+s);
         }

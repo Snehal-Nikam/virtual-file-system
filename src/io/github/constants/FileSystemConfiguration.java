@@ -1,28 +1,28 @@
 
 
-package io.github.snehal.constants;
+package io.github.constants;
 
-import io.github.snehal.utils.NativeHelperUtils;
+import io.github.utils.NativeHelperUtils;
 
 import java.io.Serializable;
 
-public class Configuration implements Serializable {
+public class FileSystemConfiguration implements Serializable {
     int size;
     int maxDirectoryName;
     int maxFileName;
     String nativeFilepath;
     String ownerUsername;
 
-    public Configuration() {
+    public FileSystemConfiguration() {
         // MegaBytes
         size = 64;
         maxDirectoryName = 16;
         maxFileName = 16;
         nativeFilepath = NativeHelperUtils.getUserHomeDirectory();
-        ownerUsername = GlobalConstants.defaultUsername;
+        ownerUsername = Constants.defaultUsername;
     }
 
-    public Configuration(int size, int maxDirectoryName, int maxFileName, String path, String userName) {
+    public FileSystemConfiguration(int size, int maxDirectoryName, int maxFileName, String path, String userName) {
         this.size = size;
         this.maxDirectoryName = maxDirectoryName;
         this.maxFileName = maxFileName;
