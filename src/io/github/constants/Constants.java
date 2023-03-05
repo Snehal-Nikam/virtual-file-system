@@ -3,21 +3,18 @@
 package io.github.constants;
 
 public class Constants {
-    public static String libName = "iFS";
-    public static String versionCode = "iFS v1.0";
-    public static String logFileExtension = ".iFS.log";
+    public static String libraryName = "vFS";
+    public static String version = "vFS v1.0";
+    public static String extension_logFile = ".vFS.log";
 
-    public static String DebugString = "{iFS} Debug: ";
-    public static String ErrorString = "{iFS} Error: ";
-    public static String logPath = "iFS_Log";
+    public static String debugStr = "{vFS} Debug: ";
+    public static String ErrorString = "{vFS} Error: ";
+    public static String logPath = "vFS_Log";
 
     public static String defaultUsername = "root";
-    public static String pathEscape = "/";
+    public static String escapePath = "/";
 
     public static int fileBlockSize = 4;
-    public static int twoPowerTen = 1024;
-
-    public static int magicSplitLength = 8;
-    public static byte[] magicCode = {0, 0, 0, 0, 0, 0, 0, 0};
+    public static int twoPowerTenVal = 1024;
 
 }

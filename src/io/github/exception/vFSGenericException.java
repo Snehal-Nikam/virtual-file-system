@@ -8,11 +8,11 @@ public class vFSGenericException extends Exception {
     }
 
     public vFSGenericException(String message) {
-        super(Constants.versionCode + message);
+        super(Constants.version + message);
     }
 
     public vFSGenericException(String message, Throwable cause) {
-        super(Constants.versionCode + message, cause);
+        super(Constants.version + message, cause);
     }
 
     public vFSGenericException(Throwable cause) {

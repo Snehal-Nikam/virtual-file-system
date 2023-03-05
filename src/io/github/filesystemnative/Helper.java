@@ -12,10 +12,10 @@ public class Helper {
     public static byte[] readFileSystemFromNativeFileSystem(String path) {
         File f = new File(path);
         byte[] _filebuffer = new byte[(int) f.length()];
-        FileInputStream fis = null;
+        FileInputStream _fInputStream = null;
         try {
-            fis = new FileInputStream(f);
-            fis.read(_filebuffer);
+            _fInputStream = new FileInputStream(f);
+            _fInputStream.read(_filebuffer);
         } catch (Exception e) {
             Logger.getInstance().LogError(e.getMessage());
         }
@@ -25,27 +25,27 @@ public class Helper {
     public static void writeFileSystemToNativeFileSystem(byte[] _buffer, String path) {
 
         // FileUtils.writeByteArrayToFile(new FileInfo(path), _buffer);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = null;
+        ByteArrayOutputStream bArrOutStream = new ByteArrayOutputStream();
+        ObjectOutput objOut = null;
         try {
-            out = new ObjectOutputStream(bos);
-            out.writeObject(_buffer);
-            out.flush();
-            byte[] bytesToWrite = bos.toByteArray();
+            objOut = new ObjectOutputStream(bArrOutStream);
+            objOut.writeObject(_buffer);
+            objOut.flush();
+            byte[] bytesToWrite = bArrOutStream.toByteArray();
             FileUtils.writeByteArrayToFile(new File(path), bytesToWrite);
         } catch (IOException e) {
             Logger.getInstance().LogError(e.getMessage());
         } finally {
             try {
-                bos.close();
+                bArrOutStream.close();
             } catch (IOException ex) {
             }
         }
     }
 
-    public static void saveFileSystemState(vFileSystem fs) throws Exception {
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("temp.bin"));
-        oos.writeObject(fs);
-        oos.close();
+    public static void saveFileSystemState(vFileSystem vfs) throws Exception {
+        ObjectOutputStream objOutStream = new ObjectOutputStream(new FileOutputStream("temp.bin"));
+        objOutStream.writeObject(vfs);
+        objOutStream.close();
     }
 }

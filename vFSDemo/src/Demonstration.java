@@ -16,13 +16,13 @@ import java.util.zip.DataFormatException;
 public class Demonstration {
     public static void main(String[] args) throws Exception {
         System.out.println(System.getProperty("user.home"));
-        File file = new File("/home/snehal/ifs.bin");
+        File file = new File("/home/snehal/vfs.bin");
         file.delete();
 
         FileSystemConfiguration config = new FileSystemConfiguration(4, 16, 16, "/home/snehal/ifs.bin", "abe");
         vFileSystem fileSystem = new vFileSystem(config);
 
-        for (File f : new File("/home/snehal/Desktop/git/ifs_data1").listFiles()) {
+        for (File f : new File("/home/snehal/Desktop/git/vfs_data1").listFiles()) {
             if (f.isDirectory())
                 continue;
             //System.out.println(f.getPath());
@@ -56,7 +56,7 @@ public class Demonstration {
         }
 
         System.out.println("ADDING FILES TO ABOVE DIRECTORY");
-        for (File f : new File("/home/snehal/Desktop/git/ifs_data1").listFiles()) {
+        for (File f : new File("/home/snehal/Desktop/git/vfs_data1").listFiles()) {
             if (f.isDirectory())
                 continue;
             //System.out.println(f.getPath());
@@ -117,7 +117,7 @@ public class Demonstration {
         fileSystem.finishFileSystem();
         Helper.saveFileSystemState(fileSystem);
         //System.out.println("fin");
-        Logger.getInstance().Finish();
+        //Logger.getInstance().Finish();
 
         FileInputStream file1 = new FileInputStream("temp.bin");
         ObjectInputStream in = new ObjectInputStream(file1);

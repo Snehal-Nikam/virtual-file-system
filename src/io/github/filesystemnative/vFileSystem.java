@@ -38,19 +38,19 @@ public class vFileSystem implements Serializable {
     }
 
     private void setupInodes() {
-        for (int i = 0; i < (currentConfig.getSize() * Constants.twoPowerTen / Constants.fileBlockSize);
+        for (int i = 0; i < (currentConfig.getSize() * Constants.twoPowerTenVal / Constants.fileBlockSize);
              ++i) {
             freeInodes.add(i);
         }
     }
 
     private void initStorageSpaceBuffer() {
-        _fileSystemBuffer = new byte[currentConfig.getSize() * Constants.twoPowerTen
-                * Constants.twoPowerTen];
+        _fileSystemBuffer = new byte[currentConfig.getSize() * Constants.twoPowerTenVal
+                * Constants.twoPowerTenVal];
     }
 
     private void setupFreeFileBlocks() {
-        for (int i = 0; i < (currentConfig.getSize() * Constants.twoPowerTen / Constants.fileBlockSize);
+        for (int i = 0; i < (currentConfig.getSize() * Constants.twoPowerTenVal / Constants.fileBlockSize);
              ++i) {
             _freeBlocks.add(i);
         }
@@ -93,7 +93,7 @@ public class vFileSystem implements Serializable {
     public void createFile(byte[] _buffer, String path) throws IOException, vFSDiskFullException {
         int noOfFileBlocks;
         byte[] _compressedBuffer = CompressionProvider.CompressByteArray(_buffer);
-        float blocks = _compressedBuffer.length / (Constants.fileBlockSize * Constants.twoPowerTen);
+        float blocks = _compressedBuffer.length / (Constants.fileBlockSize * Constants.twoPowerTenVal);
         noOfFileBlocks = (int) Math.ceil(blocks);
         if (noOfFileBlocks == 0)
             noOfFileBlocks += 1;
@@ -108,14 +108,14 @@ public class vFileSystem implements Serializable {
             _freeBlocks.remove(_freeBlocks.first());
         }
         for (int i = 0; i < noOfFileBlocks; ++i) {
-            for (int j = 0; j < Constants.fileBlockSize * Constants.twoPowerTen; ++j) {
+            for (int j = 0; j < Constants.fileBlockSize * Constants.twoPowerTenVal; ++j) {
                 if (j >= _compressedBuffer.length) {
-                    _fileSystemBuffer[(fileBlocks[i] * Constants.fileBlockSize * Constants.twoPowerTen) + j]
+                    _fileSystemBuffer[(fileBlocks[i] * Constants.fileBlockSize * Constants.twoPowerTenVal) + j]
                             = ((byte) 0);
                     continue;
                 }
-                _fileSystemBuffer[(fileBlocks[i] * Constants.fileBlockSize * Constants.twoPowerTen) + j]
-                        = _compressedBuffer[(i * Constants.fileBlockSize * Constants.twoPowerTen) + j];
+                _fileSystemBuffer[(fileBlocks[i] * Constants.fileBlockSize * Constants.twoPowerTenVal) + j]
+                        = _compressedBuffer[(i * Constants.fileBlockSize * Constants.twoPowerTenVal) + j];
             }
         }
 
@@ -147,16 +147,16 @@ public class vFileSystem implements Serializable {
         int bytesRead = 0;
         while (iterator.hasNext()) {
             int currentBlock = (int) iterator.next();
-            for (int i = 0; i < Constants.fileBlockSize * Constants.twoPowerTen; ++i) {
+            for (int i = 0; i < Constants.fileBlockSize * Constants.twoPowerTenVal; ++i) {
                 if(bytesRead >= f._fileSize)
                 {
                     continue;
                 }
                 file[seekPointer + i] = _fileSystemBuffer[currentBlock *
-                        (Constants.fileBlockSize * Constants.twoPowerTen) + i];
+                        (Constants.fileBlockSize * Constants.twoPowerTenVal) + i];
                 bytesRead++;
             }
-            seekPointer = seekPointer + (Constants.fileBlockSize * Constants.twoPowerTen);
+            seekPointer = seekPointer + (Constants.fileBlockSize * Constants.twoPowerTenVal);
         }
         file = CompressionProvider.DecompressByteArray(file);
         return file;

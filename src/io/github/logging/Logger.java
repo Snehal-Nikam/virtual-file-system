@@ -21,9 +21,9 @@ public class Logger implements Serializable {
     private String path;
 
     private Logger() {
-        path = NativeHelperUtils.getUserHomeDirectory() + Constants.pathEscape + Constants.logPath +
-                Constants.pathEscape + Constants.libName + NativeHelperUtils.getDateOrTime(true) +
-                NativeHelperUtils.getDateOrTime(false) + Constants.logFileExtension;
+        path = NativeHelperUtils.getUserHomeDirectory() + Constants.escapePath + Constants.logPath +
+                Constants.escapePath + Constants.libraryName + NativeHelperUtils.getDateOrTime(true) +
+                NativeHelperUtils.getDateOrTime(false) + Constants.extension_logFile;
         try {
             _buffer = new BufferedWriter(new FileWriter(path));
         } catch (IOException e) {
@@ -57,7 +57,7 @@ public class Logger implements Serializable {
 
     public void LogDebug(String debug) {
         try {
-            _buffer.write(Constants.DebugString + debug + "\n");
+            _buffer.write(Constants.debugStr + debug + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
