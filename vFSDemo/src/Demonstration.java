@@ -56,7 +56,7 @@ public class Demonstration {
 
         //Start : Create Directory
         System.out.println("\n\nDIRECTORIES");
-        fileSystem.createDirectory("/Semicoln_Dir", "/Semicoln_Dir");
+        fileSystem.createDirectory("/Semicolon_Dir", "/Semicolon_Dir");
         for(String s : fileSystem.listAllDirectories())
         {
             if(s!=null) System.out.println(s);
@@ -70,7 +70,7 @@ public class Demonstration {
             //System.out.println(f.getPath());
             byte[] data = Files.readAllBytes(Paths.get(f.getPath()));
             try {
-                fileSystem.createFile(data, "/Semicoln_Dir" +
+                fileSystem.createFile(data, "/Semicolon_Dir" +
                         f.getPath().substring(f.getPath().lastIndexOf('/')));
             } catch (vFSDiskFullException e) {
                 System.out.println(e.getMessage());
@@ -78,42 +78,45 @@ public class Demonstration {
         }
         //End  : Add files
         for (String s : fileSystem.listAllFiles()) {
-            if (s!=null) System.out.println("** : "+s);
+            if (s!=null) System.out.println(s);
         }
 
         //Start : Delete Directory
         System.out.println("\n\nDelete Directory");
         try {
-            fileSystem.deleteDirectory("/Semicoln_Dir");
+            fileSystem.deleteDirectory("/Semicolon_Dir");
         } catch (vFSDirectoryNotEmptyException e) {
             System.out.println(e.getMessage());
         } catch (vFSFileNotFoundException e) {
             System.out.println(e.getMessage());
         }
 
-        fileSystem.deleteFile("/Semicoln_Dir/TextFile.txt");
-        fileSystem.deleteFile("/Semicoln_Dir/restricted.txt");
-        fileSystem.deleteFile("/Semicoln_Dir/index.html");
+        fileSystem.deleteFile("/Semicolon_Dir/TextFile.txt");
+        fileSystem.deleteFile("/Semicolon_Dir/cat.jpg");
+        fileSystem.deleteFile("/Semicolon_Dir/project.ppt");
+        fileSystem.deleteFile("/Semicolon_Dir/song.mp3");
+        fileSystem.deleteFile("/Semicolon_Dir/song2.mp3");
+
 
         System.out.println("After deleting files individually");
-
-
 
         for (String s : fileSystem.listAllFiles()) {
             if(s!=null) System.out.println(s);
         }
 
         try {
-            fileSystem.deleteDirectory("/Semicoln_Dir");
+            fileSystem.deleteDirectory("/Semicolon_Dir");
         } catch (vFSDirectoryNotEmptyException e) {
             System.out.println(e.getMessage());
         } catch (vFSFileNotFoundException e) {
             System.out.println(e.getMessage());
         }
+        // End : Delete Dir
+
         System.out.println("\nList of directories");
         for(String s : fileSystem.listAllDirectories())
         {
-            System.out.println("*** : "+s);
+            System.out.println("Dir : "+s);
         }
 
         //Start : Read File
@@ -132,7 +135,7 @@ public class Demonstration {
         Helper.saveFileSystemState(fileSystem);
         //System.out.println("fin");
         //Logger.getInstance().Finish();
-        System.out.println("\nRe-opning the same file system :: ");
+        System.out.println("\nRe-opening the same file system :: ");
         FileInputStream file1 = new FileInputStream("temp.bin");
         ObjectInputStream in = new ObjectInputStream(file1);
         vFileSystem fs2 = (vFileSystem) in.readObject();
