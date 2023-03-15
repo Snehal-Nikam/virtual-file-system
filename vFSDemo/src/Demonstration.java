@@ -20,7 +20,7 @@ public class Demonstration {
         File file = new File("/home/snehal/vfs.bin");
         file.delete();
 
-        FileSystemConfiguration config = new FileSystemConfiguration(1800, 16, 16, "/home/snehal/vfs.bin", "abe");
+        FileSystemConfiguration config = new FileSystemConfiguration(128, 16, 16, "/home/snehal/vfs.bin", "abe");
         vFileSystem fileSystem = new vFileSystem(config);
         long startTime = 0;
         //create
@@ -46,7 +46,7 @@ public class Demonstration {
         //end : list files
 
         //Start : delete file
-        fileSystem.deleteFile("/index.html");
+        fileSystem.deleteFile("/project.ppt");
         //End : delete file
 
         System.out.println("\n\nAfter Deleting index.html :");
@@ -140,96 +140,6 @@ public class Demonstration {
             System.out.println("existing ** : "+s);
         }
 
-        /*
-        Scanner input = new Scanner(System.in);
-
-        while (true) {
-            System.out.println("Select an option:");
-            System.out.println("1. Add Files to file system.");
-            System.out.println("2. List All Files");
-            System.out.println("3. Delete file");
-            System.out.println("4. Create Directory");
-            System.out.println("5. List all directories");
-            System.out.println("6. Add files to directory");
-            System.out.println("7. Read File");
-            System.out.println("7. Delete Directory");
-            System.out.println("9. Quit");
-
-            int choice = input.nextInt();
-
-            switch (choice) {
-                case 1:
-                    for (File f : new File("/home/snehal/Desktop/git/vfs_data1").listFiles()) {
-                        if (f.isDirectory())
-                            continue;
-                        //System.out.println(f.getPath());
-                        byte[] data = Files.readAllBytes(Paths.get(f.getPath()));
-                        try {
-                            fileSystem.createFile(data, f.getPath().substring(f.getPath().lastIndexOf('/')));
-                        } catch (vFSDiskFullException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-                case 2:
-                    System.out.println("\n\nFileSystem after adding files");
-                    for (String s : fileSystem.listAllFiles()) {
-                        System.out.println(s);
-                    }
-                    break;
-                case 3:
-                    System.out.println("Enter file to be deleted :");
-                    String path = input.nextLine();
-                    fileSystem.deleteFile(path);
-                    break;
-                case 4:
-                    System.out.println("Enter name of directory:");
-                    String directoryName = input.nextLine();
-                    fileSystem.createDirectory("/"+directoryName, "/"+directoryName);
-                    break;
-                case 5:
-                    for(String s : fileSystem.listAllDirectories())
-                    {
-                        System.out.println(s);
-                    }
-                    break;
-                case 6:
-                    System.out.println("Enter name of directory:");
-                    String dirName = input.nextLine();
-                    for (File f : new File("/home/snehal/Desktop/git/vfs_data1").listFiles()) {
-                        if (f.isDirectory())
-                            continue;
-                        //System.out.println(f.getPath());
-                        byte[] data = Files.readAllBytes(Paths.get(f.getPath()));
-                        try {
-                            fileSystem.createFile(data, "/"+dirName +
-                                    f.getPath().substring(f.getPath().lastIndexOf('/')));
-                        } catch (vFSDiskFullException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
-                    break;
-                case 7:
-                    try {
-                        System.out.println("Enter name of file:");
-                        String filePath = input.nextLine();
-                        byte[] readFile = fileSystem.readFile("/"+filePath);
-                        System.out.println(new String(readFile));
-                    } catch (DataFormatException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                case 8:
-                    fileSystem.finishFileSystem();
-                    Helper.saveFileSystemState(fileSystem);
-                case 9:
-                    System.out.println("Goodbye!");
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid option.");
-                    break;
-            }
-        }*/
 
     }
 
